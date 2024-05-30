@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'signin_page.dart';
+import 'package:sharide/intro_screens/intro_page1.dart';
+import 'package:sharide/intro_screens/intro_page2.dart';
+import 'package:sharide/intro_screens/intro_page3.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class FrontPage extends StatefulWidget {
   const FrontPage({super.key});
@@ -10,47 +12,25 @@ class FrontPage extends StatefulWidget {
 }
 
 class _FrontPageState extends State<FrontPage> {
+  PageController _controller = PageController();
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      // backgroundColor: Color.fromARGB(255, 23, 23, 23),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Center(
-            //     child: Image(
-            //   image: AssetImage("assets/pngwing.com (2).png"),
-            // )),
-            Text(
-              "Sharide",
-              style: textTheme.displayMedium!.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Rent Your Vehicles & Earn Extra Money",
-              style: textTheme.titleSmall!,
-            ),
-            SizedBox(
-              height: 200,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignInPage(),
-                    ));
-              },
-              child: Text(
-                "Get Started",
-                style: TextStyle(fontSize: 25),
-              ),
-            ),
-          ],
-        ),
+      body: Stack(
+        children: [
+          PageView(
+            controller: _controller,
+            children: [
+              IntroPage1(),
+              IntroPage2(),
+              IntroPage3(),
+            ],
+          ),
+          Container(
+            alignment: Alignment(0, 0.70),
+            child: SmoothPageIndicator(controller: _controller, count: 3),
+          ),
+        ],
       ),
     );
   }

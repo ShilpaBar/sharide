@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "907065792211",
+    "project_id": "sharide-ef952",
+    "storage_bucket": "sharide-ef952.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907065792211:android:9a94994846fa209de1e626",
+        "android_client_info": {
+          "package_name": "com.sharide.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmw9UGU6DQS40nlT5G_fpQ5BwWLRUollM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

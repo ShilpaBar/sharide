@@ -5,13 +5,15 @@ class CustomTextfeild extends StatefulWidget {
   final IconData prefixIcon;
   final TextInputType? keyboardType;
   final bool isPassword;
+  final String? hintText;
+  final TextEditingController? textEditingController;
 
   const CustomTextfeild(
       {super.key,
       this.labelText,
       this.prefixIcon = Icons.email,
       this.keyboardType,
-      this.isPassword = false});
+      this.isPassword = false, this.hintText,  this.textEditingController});
 
   @override
   State<CustomTextfeild> createState() => _CustomTextfeildState();
@@ -29,8 +31,9 @@ class _CustomTextfeildState extends State<CustomTextfeild> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       child: TextFormField(
+        controller: widget.textEditingController,
         obscureText: isObscure,
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
@@ -40,6 +43,12 @@ class _CustomTextfeildState extends State<CustomTextfeild> {
           labelText: widget.labelText,
           labelStyle: TextStyle(
             color: Color(0xFFAFA8A8),
+          ),
+          hintText: widget.hintText,
+          hintStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
           prefixIcon: Icon(widget.prefixIcon),
           suffixIcon: widget.isPassword

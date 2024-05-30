@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sharide/home/bottom_nav_screen.dart';
 
 import 'widgets/custom_textfeild.dart';
 
@@ -54,10 +55,12 @@ class _SignUpPageState extends State<SignUpPage> {
               height: 50,
             ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => BottomNavigationScreen(),));
+              },
               child: Text(
                 "SIGN UP",
-                style: TextStyle(fontSize: 25),
+                style: TextStyle(fontSize: 23),
               ),
             ),
             Divider(

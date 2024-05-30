@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
             backgroundColor: Color(0xFF009963),
             foregroundColor: Colors.white,
-            fixedSize: Size.fromWidth(MediaQuery.of(context).size.width * .8),
+            fixedSize: Size.fromWidth(MediaQuery.of(context).size.width * .9),
             textStyle:
                 GoogleFonts.inriaSerifTextTheme(Typography.whiteCupertino)
                     .headlineLarge,
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Color(0xFF1A1A1A),
         ),
       ),
-      home: const FrontPage(),
+      home: FrontPage(),
     );
   }
 }

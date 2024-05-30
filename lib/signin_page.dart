@@ -82,12 +82,8 @@ class _SignInPageState extends State<SignInPage> {
             },
             child: Text(
               "SIGN IN",
-              // style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 23),
             ),
-            // style: ElevatedButton.styleFrom(
-            //   foregroundColor: Colors.white,
-            //   fixedSize: Size.fromWidth(MediaQuery.sizeOf(context).width - 40),
-            // ),
           ),
           Divider(
             color: Color(0xFF999999),
