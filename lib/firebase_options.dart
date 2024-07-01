@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,20 +41,51 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDmw9UGU6DQS40nlT5G_fpQ5BwWLRUollM',
-    appId: '1:907065792211:android:9a94994846fa209de1e626',
-    messagingSenderId: '907065792211',
-    projectId: 'sharide-ef952',
-    storageBucket: 'sharide-ef952.appspot.com',
+    apiKey: 'AIzaSyBTyYff5MDxMqc3GhSNjgKgwYaktch3HaU',
+    appId: '1:643037091126:android:91387b6990a583c90f8f97',
+    messagingSenderId: '643037091126',
+    projectId: 'sharide-app',
+    storageBucket: 'sharide-app.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCLrZBInj0dQ2CF8jca1MXXsUoVoHjrSug',
-    appId: '1:907065792211:ios:6711d8b529da41cde1e626',
-    messagingSenderId: '907065792211',
-    projectId: 'sharide-ef952',
-    storageBucket: 'sharide-ef952.appspot.com',
+    apiKey: 'AIzaSyBfW7WslVnfCW0rJD8wMvqbVW7fGwtBkUY',
+    appId: '1:643037091126:ios:e1ba1f0854772b1f0f8f97',
+    messagingSenderId: '643037091126',
+    projectId: 'sharide-app',
+    storageBucket: 'sharide-app.appspot.com',
+    androidClientId: '643037091126-9ai14t3pf3sa7q915v2g996gn8l7h6dm.apps.googleusercontent.com',
+    iosClientId: '643037091126-vf54g7rosfslk2ju1j2r54v3ta5l2tnh.apps.googleusercontent.com',
     iosBundleId: 'com.sharide.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCM4Psrtp1Mpq2mg0cuTXZJRLe-XPmK_fk',
+    appId: '1:643037091126:web:da568e61aa291eb20f8f97',
+    messagingSenderId: '643037091126',
+    projectId: 'sharide-app',
+    authDomain: 'sharide-app.firebaseapp.com',
+    storageBucket: 'sharide-app.appspot.com',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyBfW7WslVnfCW0rJD8wMvqbVW7fGwtBkUY',
+    appId: '1:643037091126:ios:6f719ee414e278240f8f97',
+    messagingSenderId: '643037091126',
+    projectId: 'sharide-app',
+    storageBucket: 'sharide-app.appspot.com',
+    androidClientId: '643037091126-9ai14t3pf3sa7q915v2g996gn8l7h6dm.apps.googleusercontent.com',
+    iosClientId: '643037091126-4dc90rlpe8q5ba23475soc41kolceat4.apps.googleusercontent.com',
+    iosBundleId: 'com.sharide.sharide',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCM4Psrtp1Mpq2mg0cuTXZJRLe-XPmK_fk',
+    appId: '1:643037091126:web:9a120039134d3fe70f8f97',
+    messagingSenderId: '643037091126',
+    projectId: 'sharide-app',
+    authDomain: 'sharide-app.firebaseapp.com',
+    storageBucket: 'sharide-app.appspot.com',
   );
 
 }

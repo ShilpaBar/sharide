@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/instance_manager.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:pinput/pinput.dart';
+import 'package:sharide/location/locationhelper.dart';
+import 'package:sharide/models/directions_model.dart';
+import 'package:sharide/models/rides_model.dart';
+import 'package:sharide/repository/rides_repository.dart';
+import 'package:sharide/repository/user_repository.dart';
+import 'package:sharide/repository/directions_repository.dart';
 import 'package:sharide/rides_screen.dart';
 
 class BookRideScreen extends StatefulWidget {
@@ -9,19 +21,115 @@ class BookRideScreen extends StatefulWidget {
 }
 
 class _BookRideScreenState extends State<BookRideScreen> {
+  Marker? _origin;
+  Marker? _destination;
+  DirectionsModel? _info;
+  RidesModel ridesModel = RidesModel();
+  GoogleMapController? _googleMapController;
+  LocationController locationHelper = Get.find<LocationController>();
+
+  @override
+  void dispose() {
+    _googleMapController?.dispose();
+    super.dispose();
+  }
+
+  void _addMarker(LatLng pos) async {
+    if (_origin == null || (_origin != null && _destination != null)) {
+      setState(() {
+        _origin = Marker(
+          markerId: MarkerId("Origin"),
+          infoWindow: InfoWindow(title: "Origin"),
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          position: pos,
+        );
+        _destination = null;
+        _info = null;
+      });
+    } else {
+      setState(() {
+        _destination = Marker(
+          markerId: MarkerId("Destination"),
+          infoWindow: InfoWindow(title: "Destination"),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          position: pos,
+        );
+      });
+      final directionsModel = await DirectionsRepository()
+          .getDirections(origin: _origin!.position, destination: pos);
+      setState(() => _info = directionsModel);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
-            Container(
-              height: MediaQuery.sizeOf(context).height * .7,
-              child: Image(
-                image: AssetImage("assets/images/map.png"),
-                fit: BoxFit.cover,
-              ),
-            ),
+            GetBuilder<LocationController>(builder: (_) {
+              return locationHelper.myPosition == null
+                  ? Center(
+                      child:
+                          Text(" Please wait while we fetching your location"),
+                    )
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        GoogleMap(
+                          myLocationEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                            zoom: 15,
+                            target: LatLng(locationHelper.myPosition!.latitude,
+                                locationHelper.myPosition!.longitude),
+                          ),
+                          markers: {
+                            if (_origin != null) _origin!,
+                            if (_destination != null) _destination!,
+                          },
+                          onLongPress: _addMarker,
+                          polylines: {
+                            if (_info != null)
+                              Polyline(
+                                polylineId: PolylineId("Overview_polyline"),
+                                color: Colors.red,
+                                width: 5,
+                                points: _info!.polylinePoints
+                                    .map((e) => LatLng(e.latitude, e.longitude))
+                                    .toList(),
+                              ),
+                          },
+                        ),
+                        if (_info != null)
+                          Positioned(
+                            top: 20,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 6,
+                                horizontal: 12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.greenAccent,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    offset: Offset(0, 2),
+                                    blurRadius: 6.0,
+                                  )
+                                ],
+                              ),
+                              child: Text(
+                                "${_info?.totalDistance}, ${_info?.totalDuration}",
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+            }),
             DraggableScrollableSheet(
               expand: true,
               shouldCloseOnMinExtent: true,
@@ -116,7 +224,7 @@ class _BookRideScreenState extends State<BookRideScreen> {
                           height: 30,
                         ),
                         Container(
-                          height: 490,
+                          height: 700,
                           width: 400,
                           decoration: BoxDecoration(
                             color: Color(0xFF2E2E2E),
@@ -245,56 +353,60 @@ class _BookRideScreenState extends State<BookRideScreen> {
                               SizedBox(
                                 height: 9,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  OutlinedButton(
-                                    onPressed: () {
-                                      var DatePicked = showDatePicker(
-                                          context: context,
-                                          firstDate: DateTime(2024),
-                                          lastDate: DateTime(2026),
-                                          initialDate: DateTime.now());
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Pick Date",
-                                          style: TextStyle(
-                                              color: Color(0xFFAFA8A8)),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Icon(Icons.calendar_month,
-                                            color: Color(0xFF009963)),
-                                      ],
+                              OutlinedButton(
+                                onPressed: () async {
+                                  DateTime? datePicked = await showDatePicker(
+                                      context: context,
+                                      firstDate: DateTime(2024),
+                                      lastDate: DateTime(2026),
+                                      initialDate: DateTime.now());
+                                  if (datePicked != null) {
+                                    ridesModel.date = datePicked;
+                                    setState(() {});
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      " ${DateFormat('EEEE, MMM d').format(ridesModel.date)}",
+                                      style: TextStyle(color: Colors.white),
                                     ),
-                                  ),
-                                  OutlinedButton(
-                                    onPressed: () {
-                                      var TimePicked = showTimePicker(
-                                          context: context,
-                                          initialTime: TimeOfDay.now());
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          "Pick Time",
-                                          style: TextStyle(
-                                            color: Color(0xFFAFA8A8),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 20,
-                                        ),
-                                        Icon(Icons.access_time_outlined,
-                                            color: Color(0xFF009963)),
-                                      ],
+                                    Icon(Icons.calendar_month,
+                                        color: Color(0xFF009963)),
+                                  ],
+                                ),
+                              ),
+                              OutlinedButton(
+                                onPressed: () async {
+                                  TimeOfDay? timePicked = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.now());
+                                  if (timePicked != null) {
+                                    ridesModel.date = DateTime(
+                                        ridesModel.date.year,
+                                        ridesModel.date.month,
+                                        ridesModel.date.day,
+                                        timePicked.hour,
+                                        timePicked.minute);
+                                    setState(() {});
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${DateFormat.jm().format(ridesModel.date)}",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Icon(Icons.access_time_outlined,
+                                        color: Color(0xFF009963)),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 15,

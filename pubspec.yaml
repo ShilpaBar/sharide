@@ -44,9 +44,25 @@ dependencies:
   intl: ^0.19.0
   another_stepper: ^1.2.2
   quickalert: ^1.1.0
-  firebase_core: ^2.32.0
-  # package_rename: ^1.6.0
-  # awesome_dialog: ^3.2.1
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
+  google_sign_in: ^6.2.1
+  get: ^4.6.6
+  pretty_logger: ^1.0.0
+  pinput: ^5.0.0
+  cloud_firestore: ^5.0.0
+  uuid: ^4.4.0
+  gap: ^3.0.1
+  image_picker: ^1.1.2
+  firebase_storage: ^12.0.1
+  google_maps_flutter: ^2.7.0
+  geocoding: ^3.0.0
+  geolocator: ^12.0.0
+  flutter_polyline_points: ^2.0.0
+  flutter_google_places_sdk: ^0.3.9
+  dio: ^5.4.3+1
+
+  
   
 
 dev_dependencies:
@@ -58,7 +74,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   # package_rename_plus: ^1.0.1
   package_rename: ^1.6.0
 

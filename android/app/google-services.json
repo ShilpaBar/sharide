@@ -1,26 +1,51 @@
 {
   "project_info": {
-    "project_number": "907065792211",
-    "project_id": "sharide-ef952",
-    "storage_bucket": "sharide-ef952.appspot.com"
+    "project_number": "643037091126",
+    "project_id": "sharide-app",
+    "storage_bucket": "sharide-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:907065792211:android:9a94994846fa209de1e626",
+        "mobilesdk_app_id": "1:643037091126:android:91387b6990a583c90f8f97",
         "android_client_info": {
           "package_name": "com.sharide.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "643037091126-9ai14t3pf3sa7q915v2g996gn8l7h6dm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sharide.app",
+            "certificate_hash": "df7a3267d85a8bb1a8e0955fb5b9202fd9edcbf8"
+          }
+        },
+        {
+          "client_id": "643037091126-qh76ctvk69t07rbfepfmdj0id6hvord5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDmw9UGU6DQS40nlT5G_fpQ5BwWLRUollM"
+          "current_key": "AIzaSyBTyYff5MDxMqc3GhSNjgKgwYaktch3HaU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643037091126-qh76ctvk69t07rbfepfmdj0id6hvord5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "643037091126-vf54g7rosfslk2ju1j2r54v3ta5l2tnh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sharide.app"
+              }
+            }
+          ]
         }
       }
     }

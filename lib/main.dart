@@ -1,17 +1,36 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sharide/authentication/google_signin.dart';
+import 'package:sharide/firebase_options.dart';
 import 'package:sharide/front_page.dart';
+import 'package:sharide/location/locationhelper.dart';
+import 'package:sharide/otp_screen.dart';
+import 'package:sharide/repository/user_repository.dart';
 
-void main() {
+import 'repository/rides_repository.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  Get.lazyPut(() => LocationController());
+  Get.put(AuthenticationContoller());
+  Get.put(UserRepository());
+  Get.put(RidesRepository());
+
   runApp(const MyApp());
 }
+
+final snackKey = GlobalKey<ScaffoldMessengerState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      scaffoldMessengerKey: snackKey,
       debugShowCheckedModeBanner: false,
       title: "Sharide",
       theme: ThemeData.light().copyWith(
