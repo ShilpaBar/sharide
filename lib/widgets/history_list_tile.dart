@@ -5,7 +5,7 @@ class HistoryListTile extends StatefulWidget {
   final String pickUpLocation;
   final String dropLocation;
   final DateTime? dateTime;
-  final int? charge;
+  final double? charge;
   const HistoryListTile(
       {super.key,
       this.pickUpLocation = "XYZ",
@@ -43,7 +43,9 @@ class _HistoryListTileState extends State<HistoryListTile> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.pickUpLocation,
+                    widget.pickUpLocation.isEmpty
+                        ? "N/A"
+                        : widget.pickUpLocation,
                     style: TextStyle(fontSize: 20),
                   ),
                 ],
@@ -55,7 +57,7 @@ class _HistoryListTileState extends State<HistoryListTile> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    widget.dropLocation,
+                    widget.dropLocation.isEmpty ? "N/A" : widget.dropLocation,
                     style: TextStyle(fontSize: 20),
                   ),
                 ],

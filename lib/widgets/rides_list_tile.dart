@@ -33,9 +33,9 @@ class _RidesListTileState extends State<RidesListTile> {
         side: BorderSide(color: Colors.white),
         borderRadius: BorderRadius.circular(20),
       ),
-      leading: Image(
-        image: AssetImage(widget.image!),
-      ),
+      // leading: Image(
+      //   image: AssetImage(widget.image!),
+      // ),
       title: Row(
         children: [
           Text(
@@ -71,7 +71,7 @@ class _RidesListTileState extends State<RidesListTile> {
             size: 16,
           ),
           Text(
-            widget.price!,
+            widget.price ?? "",
             style: TextStyle(fontSize: 16),
           ),
         ],
