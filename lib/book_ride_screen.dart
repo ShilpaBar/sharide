@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get/instance_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:pinput/pinput.dart';
 import 'package:sharide/location/locationhelper.dart';
 import 'package:sharide/models/directions_model.dart';
 import 'package:sharide/models/rides_model.dart';
-import 'package:sharide/repository/rides_repository.dart';
-import 'package:sharide/repository/user_repository.dart';
 import 'package:sharide/repository/directions_repository.dart';
 import 'package:sharide/rides_screen.dart';
 

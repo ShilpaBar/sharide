@@ -61,6 +61,8 @@ dependencies:
   flutter_polyline_points: ^2.0.0
   flutter_google_places_sdk: ^0.3.9
   dio: ^5.4.3+1
+  upi_india: ^3.0.1
+  insta_image_viewer: ^1.0.4
 
   
   

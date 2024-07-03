@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_google_places_sdk/flutter_google_places_sdk.dart'
-    as address;
+    as placessdk;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,8 +14,8 @@ import 'package:sharide/constants/app_constants.dart';
 
 class LocationController extends GetxController {
   GeolocatorPlatform geolocatorPlatform = GeolocatorPlatform.instance;
-  address.FlutterGooglePlacesSdk places =
-      address.FlutterGooglePlacesSdk(AppConstants.gmapApiKey);
+  placessdk.FlutterGooglePlacesSdk places =
+      placessdk.FlutterGooglePlacesSdk(AppConstants.gmapApiKey);
   Position? myPosition;
   Set<Polyline> polyLines = {};
   Marker? origin;
@@ -81,6 +81,13 @@ class LocationController extends GetxController {
     } else {
       return null;
     }
+  }
+
+  Future<List<String>> getAddressPrediction(String searchValue) async {
+    placessdk.FindAutocompletePredictionsResponse? predictionsResponse =
+        await places.findAutocompletePredictions(searchValue);
+
+    return predictionsResponse.predictions.map((p) => p.fullText).toList();
   }
 
   Completer<GoogleMapController> mapController =
@@ -153,6 +160,7 @@ class LocationController extends GetxController {
         PointLatLng(
             destination!.position.latitude, destination!.position.longitude),
         travelMode: travelMode);
+    update();
 
     if (result.points.isNotEmpty) {
       // PLog.green("${result.points.map((e) => e.longitude)}");

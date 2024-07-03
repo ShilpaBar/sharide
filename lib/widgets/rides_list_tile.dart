@@ -9,6 +9,7 @@ class RidesListTile extends StatefulWidget {
   final String? description;
   final String? price;
   final bool? selected;
+  final Function()? onTap;
 
   const RidesListTile({
     super.key,
@@ -19,6 +20,7 @@ class RidesListTile extends StatefulWidget {
     this.description,
     this.price,
     this.selected,
+    this.onTap,
   });
 
   @override
@@ -76,13 +78,7 @@ class _RidesListTileState extends State<RidesListTile> {
           ),
         ],
       ),
-      onTap: () {
-        // setState(
-        //   () {
-        //     if (widget.selected) {}
-        //   },
-        // );
-      },
+      onTap: widget.onTap,
     );
   }
 }

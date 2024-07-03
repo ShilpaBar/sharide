@@ -688,6 +688,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+1"
+  insta_image_viewer:
+    dependency: "direct main"
+    description:
+      name: insta_image_viewer
+      sha256: "5c3150415d19945ee7eb9a986ed636219e384164e53a4854e8c6f3dbb3b3e197"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   intl:
     dependency: "direct main"
     description:
@@ -1013,6 +1021,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  upi_india:
+    dependency: "direct main"
+    description:
+      name: upi_india
+      sha256: "483f1425ee8f0897397861b107e50b3aa195fec71215f86e906b625e841e90dd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   uuid:
     dependency: "direct main"
     description:

@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:pretty_logger/pretty_logger.dart';
 import 'package:sharide/authentication/google_signin.dart';
 import 'package:sharide/models/user_model.dart';
@@ -74,13 +75,15 @@ class _EditProfileState extends State<EditProfile> {
                 ),
                 Stack(
                   children: [
-                    CircleAvatar(
-                      radius: 65,
-                      backgroundImage: imagePath != null
-                          ? FileImage(File(imagePath!))
-                          : NetworkImage(
-                                  "${userRepository.userModel!.profilePic ?? authController.user!.photoURL}")
-                              as ImageProvider,
+                    InstaImageViewer(
+                      child: CircleAvatar(
+                        radius: 65,
+                        backgroundImage: imagePath != null
+                            ? FileImage(File(imagePath!))
+                            : NetworkImage(
+                                    "${userRepository.userModel!.profilePic ?? authController.user!.photoURL}")
+                                as ImageProvider,
+                      ),
                     ),
                     Positioned(
                       bottom: 0,

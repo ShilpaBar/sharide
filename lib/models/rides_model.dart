@@ -13,6 +13,8 @@ class RidesModel {
   int? seat;
   String? transportType;
   String? description;
+  String? duration;
+  String? distance;
 
   RidesModel({
     this.id,
@@ -24,6 +26,8 @@ class RidesModel {
     this.seat = 1,
     this.transportType = "Sedan",
     this.description,
+    this.duration,
+    this.distance,
   }) : date = date ?? DateTime.now();
 
   RidesModel copywith({
@@ -36,17 +40,21 @@ class RidesModel {
     int? seat,
     String? transportType,
     String? description,
+    String? duration,
+    String? distance,
   }) {
     return RidesModel(
       id: id ?? this.id,
       riderName: riderName ?? this.riderName,
       date: date ?? this.date,
       location: location ?? this.location,
-      destination: destination ?? destination,
+      destination: destination ?? this.destination,
       price: price ?? this.price,
       seat: seat ?? this.seat,
       transportType: transportType ?? this.transportType,
       description: description ?? this.description,
+      duration: duration ?? this.duration,
+      distance: distance ?? this.distance,
     );
   }
 
@@ -61,20 +69,24 @@ class RidesModel {
       'seat': seat,
       'transport_type': transportType,
       'description': description,
+      'duration': duration,
+      'distance': distance,
     };
   }
 
   factory RidesModel.fromMap(Map<String, dynamic> map) {
     return RidesModel(
-      id: map['id'] as String,
-      riderName: map['rideName'] as String,
-      location: map['location'] as String,
-      destination: map['destination'] as String,
-      date: DateTime.parse(map['date'] as String),
+      id: map['id'],
+      riderName: map['rideName'],
+      location: map['location'],
+      destination: map['destination'],
+      date: DateTime.parse(map['date']),
       price: double.parse(map['price']),
-      transportType: map['transport_type'] as String,
+      transportType: map['transport_type'],
       seat: map['seat'],
-      description: map['description'] as String,
+      description: map['description'],
+      duration: map['duration'],
+      distance: map['distance'],
     );
   }
 
@@ -85,6 +97,6 @@ class RidesModel {
 
   @override
   String toString() {
-    return 'RidesModel(id: $id, rideName: $riderName,location:$location,destination:$destination, date: $date, price: $price, seat: $seat, description: $description, transport_type:$transportType)';
+    return 'RidesModel(id: $id, rideName: $riderName,location:$location,destination:$destination, date: $date, price: $price, seat: $seat, description: $description, transport_type:$transportType, duration:$duration, distance:$distance)';
   }
 }

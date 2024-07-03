@@ -48,6 +48,16 @@ class _RidesScreenState extends State<RidesScreen> {
                                   snapshot.data!.docs[index].data();
 
                               return RidesListTile(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ConfirmOrderPage(
+                                        ridesModel: data,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 title: "${data.transportType}",
                                 seats: data.seat,
                                 description: data.description,
@@ -90,22 +100,17 @@ class _RidesScreenState extends State<RidesScreen> {
           );
         }),
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ConfirmOrderPage(),
-            ),
-          );
-        },
-        child: Text(
-          "Choose",
-          style: TextStyle(fontSize: 23),
-        ),
-      ),
+      // floatingActionButtonLocation:
+      //     FloatingActionButtonLocation.miniCenterFloat,
+      // floatingActionButton: ElevatedButton(
+      //   onPressed: () {
+
+      //   },
+      //   child: Text(
+      //     "Choose",
+      //     style: TextStyle(fontSize: 23),
+      //   ),
+      // ),
     );
   }
 }
