@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:pretty_logger/pretty_logger.dart';
-import 'package:sharide/authentication/google_signin.dart';
+import 'package:sharide/authentication/authentication.dart';
 import 'package:sharide/models/user_model.dart';
 import 'package:sharide/repository/user_repository.dart';
 import 'package:sharide/widgets/custom_textfeild.dart';
@@ -61,7 +61,7 @@ class _EditProfileState extends State<EditProfile> {
         appBar: AppBar(),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(35),
+            padding: EdgeInsets.all(30),
             child: Column(
               children: [
                 Text(
@@ -81,7 +81,7 @@ class _EditProfileState extends State<EditProfile> {
                         backgroundImage: imagePath != null
                             ? FileImage(File(imagePath!))
                             : NetworkImage(
-                                    "${userRepository.userModel!.profilePic ?? authController.user!.photoURL}")
+                                    "${userRepository.userModel!.profilePic ?? "https://cdn-icons-png.flaticon.com/128/4140/4140048.png"}")
                                 as ImageProvider,
                       ),
                     ),
@@ -128,10 +128,10 @@ class _EditProfileState extends State<EditProfile> {
                 CustomTextfeild(
                   textEditingController: emailTextController,
                   prefixIcon: Icons.email,
-                  readOnly: userRepository.userModel!.authType == "google",
                 ),
                 CustomTextfeild(
                   textEditingController: phoneTextController,
+                  readOnly: true,
                   prefixIcon: Icons.phone,
                 ),
                 // CustomTextfeild(
@@ -143,7 +143,7 @@ class _EditProfileState extends State<EditProfile> {
           ),
         ),
         bottomSheet: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 30),
           child: ElevatedButton(
               onPressed: () async {
                 if (imagePath != null) {
@@ -160,17 +160,19 @@ class _EditProfileState extends State<EditProfile> {
                     setState(() {});
                   } catch (error) {}
                 }
-                await userRepository.updateUser(UserModel(
-                  id: userRepository.userModel!.id,
-                  authType: userRepository.userModel!.authType,
+                await userRepository.createUser(UserModel(
                   fullName: nameTextController.text,
                   phoneNo: phoneTextController.text,
                   email: userRepository.userModel!.email,
                   profilePic: imageUrl ?? userRepository.userModel!.profilePic,
                 ));
                 PLog.yellow(userRepository.userModel!.toString());
+                Navigator.pop(context);
               },
-              child: Text("Save")),
+              child: Text(
+                "Save",
+                style: TextStyle(fontSize: 24),
+              )),
         ),
       );
     });

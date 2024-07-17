@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sharide/edit_profile.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:sharide/bnb/profile/views/payment_methods/add_payment_method.dart';
+import 'package:sharide/bnb/profile/views/edit_profile.dart';
 import 'package:sharide/repository/user_repository.dart';
+import 'package:sharide/widgets/custom_textfeild.dart';
 import 'package:sharide/widgets/profile_menu.dart';
-import '../../authentication/google_signin.dart';
+import '../../authentication/authentication.dart';
 import '../../models/profile_items_model.dart';
 
 class Profile extends StatefulWidget {
@@ -21,13 +25,13 @@ class _ProfileState extends State<Profile> {
   List<ProfileItemsModel> profileItemsModelList = [
     ProfileItemsModel(title: "Settings", leading: Icons.settings_outlined),
     ProfileItemsModel(
-        title: "Billing Details",
+        title: "Payment Methods",
         leading: Icons.account_balance_wallet_outlined),
     ProfileItemsModel(
         title: "Privacy Policy", leading: Icons.privacy_tip_outlined),
     ProfileItemsModel(title: "Help & Support", leading: Icons.help_outline),
   ];
-
+  // List<VoidCallback> onTapFunction =
   @override
   Widget build(BuildContext context) {
     return GetBuilder<UserRepository>(builder: (_) {
@@ -37,8 +41,28 @@ class _ProfileState extends State<Profile> {
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-              onPressed: () async {
-                await authController.signOut(context);
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text("Log out"),
+                    content: Text("Do you want to log out?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          await authController.signOut(context);
+                        },
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(
+                            color: Color(0xFF009963),
+                            fontSize: 18,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
               },
               icon: Icon(
                 Icons.logout,
@@ -56,7 +80,7 @@ class _ProfileState extends State<Profile> {
                 CircleAvatar(
                   radius: 70,
                   backgroundImage: NetworkImage(
-                      "${userRepository.userModel!.profilePic ?? authController.user!.photoURL}"),
+                      "${userRepository.userModel!.profilePic ?? "https://cdn-icons-png.flaticon.com/128/4140/4140048.png"}"),
                 ),
                 SizedBox(
                   height: 20,
@@ -87,13 +111,27 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 SizedBox(
-                  height: 60,
+                  height: 45,
                 ),
                 ...List.generate(
                   profileItemsModelList.length,
                   (index) => ProfileMenu(
-                      title: profileItemsModelList[index].title,
-                      icon: profileItemsModelList[index].leading),
+                    title: profileItemsModelList[index].title,
+                    icon: profileItemsModelList[index].leading,
+                    onTap: [
+                      () {},
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BillingDetails(),
+                          ),
+                        );
+                      },
+                      () {},
+                      () {}
+                    ][index],
+                  ),
                 ),
               ],
             ),

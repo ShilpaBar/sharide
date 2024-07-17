@@ -3,9 +3,12 @@ import 'package:another_stepper/widgets/another_stepper.dart';
 // import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:pretty_logger/pretty_logger.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:sharide/models/rides_model.dart';
-import 'package:sharide/upi_payment_screen.dart';
+import 'package:upi_india/upi_india.dart';
+import 'package:uuid/uuid.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
   final RidesModel ridesModel;
@@ -17,6 +20,128 @@ class ConfirmOrderPage extends StatefulWidget {
 
 class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   List<StepperData> stepperData = [];
+  final UpiIndia _upiIndia = UpiIndia();
+  UpiResponse? _transaction;
+  List<UpiApp>? apps;
+
+  TextStyle header = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
+
+  TextStyle value = TextStyle(
+    fontWeight: FontWeight.w400,
+    fontSize: 14,
+  );
+
+  Future<UpiResponse> initiateTransaction(UpiApp app) async {
+    String refId = DateTime.now().toIso8601String();
+    PLog.red(refId);
+    return _upiIndia.startTransaction(
+        app: app,
+        receiverUpiId: "subhabratadash2-3@okicici",
+        receiverName: "Subhabrata Das",
+        transactionRefId: refId,
+        amount: widget.ridesModel.price!);
+  }
+
+  Widget displayUpiApps() {
+    if (apps == null) {
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (apps!.isEmpty) {
+      return Center(
+        child: Text(
+          "No apps found to handle transaction.",
+          style: header,
+        ),
+      );
+    } else {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Wrap(
+            children: apps!.map<Widget>((UpiApp app) {
+              return GestureDetector(
+                onTap: () async {
+                  _transaction = await initiateTransaction(app);
+                  if (mounted) Navigator.pop(context);
+                  setState(() {});
+                  if (_transaction != null) {
+                    PLog.red("${_transaction!.status}");
+                  }
+                  _transaction != null
+                      ? _transaction!.status == "submitted" ||
+                              _transaction!.status == "successful"
+                          ? QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.success,
+                              animType: QuickAlertAnimType.slideInUp,
+                              barrierDismissible: false,
+                              backgroundColor:
+                                  Theme.of(context).dialogBackgroundColor,
+                              title: "Order Submitted!",
+                              titleColor: Colors.white,
+                              text: "Thank you for your order",
+                              textColor: Theme.of(context).primaryColorLight,
+                              confirmBtnText: "Order Submitted",
+                              confirmBtnColor: Color.fromARGB(255, 2, 13, 9),
+                            )
+                          : QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.error,
+                              animType: QuickAlertAnimType.slideInUp,
+                              barrierDismissible: false,
+                              backgroundColor:
+                                  Theme.of(context).dialogBackgroundColor,
+                              title: "Order Failed!",
+                              titleColor: Colors.white,
+                              text: "Your payment has been failed",
+                              textColor: Theme.of(context).primaryColorLight,
+                              confirmBtnText: "Payment Failed",
+                              // confirmBtnColor: Color(0xFF009963),
+                            )
+                      : QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.error,
+                          animType: QuickAlertAnimType.slideInUp,
+                          barrierDismissible: false,
+                          backgroundColor:
+                              Theme.of(context).dialogBackgroundColor,
+                          title: "Order Cancelled",
+                          titleColor: Colors.white,
+                          text: "You have cancelled your transaction!",
+                          textColor: Theme.of(context).primaryColorLight,
+                          confirmBtnText: "Order Cancelled",
+                          confirmBtnColor: Color(0xFF009963),
+                        );
+                },
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.memory(
+                        app.icon,
+                        height: 60,
+                        width: 60,
+                      ),
+                      Text(app.name),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     stepperData = [
@@ -55,6 +180,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         ),
       ),
     ];
+    _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
+      setState(() {
+        apps = value;
+      });
+    }).catchError((e) {
+      print(e);
+      apps = [];
+    });
     super.initState();
   }
 
@@ -179,45 +312,42 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UpiPaymentScreen(),
-                          ));
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 360,
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF2E2E2E),
-                        border: Border.all(
-                          color: Color(0xFFAFA8A8),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.credit_card,
-                            color: Colors.white54,
-                          ),
-                          Text(
-                            "  Add payment method",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios)
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 17,
-                  ),
+                  // InkWell(
+                  //   onTap: () {},
+                  //   child: Container(
+                  //     height: 50,
+                  //     width: 360,
+                  //     padding: EdgeInsets.only(left: 10, right: 10),
+                  //     decoration: BoxDecoration(
+                  //       color: Color(0xFF2E2E2E),
+                  //       border: Border.all(
+                  //         color: Color(0xFFAFA8A8),
+                  //       ),
+                  //     ),
+                  //     child: Row(
+                  //       children: [
+                  //         Icon(
+                  //           Icons.credit_card,
+                  //           color: Colors.white54,
+                  //         ),
+                  //         Text(
+                  //           "  Add payment method",
+                  //           style: TextStyle(fontSize: 14),
+                  //         ),
+                  //         Spacer(),
+                  //         Icon(Icons.arrow_forward_ios)
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   ElevatedButton(
                     onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          useSafeArea: true,
+                          builder: (BuildContext context) {
+                            return displayUpiApps();
+                          });
                       // AwesomeDialog(
                       //   context: context,
                       //   dialogType: DialogType.success,
@@ -226,21 +356,6 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
                       //   desc: "Thank you for your order",
                       //   btnOkOnPress: () {},
                       // ).show();
-
-                      QuickAlert.show(
-                        context: context,
-                        type: QuickAlertType.success,
-                        animType: QuickAlertAnimType.slideInUp,
-                        barrierDismissible: false,
-                        backgroundColor:
-                            Theme.of(context).dialogBackgroundColor,
-                        title: "Order Successful!",
-                        titleColor: Colors.white,
-                        text: "Thank you for your order",
-                        textColor: Theme.of(context).primaryColorLight,
-                        confirmBtnText: "Order Status",
-                        confirmBtnColor: Color(0xFF009963),
-                      );
                     },
                     child: Text(
                       "ORDER YOUR RIDE",

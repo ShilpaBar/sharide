@@ -38,19 +38,6 @@ class _IntroPage3State extends State<IntroPage3> {
             style: TextStyle(fontSize: 18),
             textAlign: TextAlign.center,
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SignInPage(),
-                  ));
-            },
-            child: Text(
-              "Get Started",
-              style: TextStyle(fontSize: 25),
-            ),
-          ),
         ],
       ),
     );

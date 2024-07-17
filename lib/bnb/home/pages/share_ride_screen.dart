@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:get/instance_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pinput/pinput.dart';
 import 'package:pretty_logger/pretty_logger.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:sharide/authentication/authentication.dart';
+import 'package:sharide/bnb/profile/views/payment_methods/add_payment_method.dart';
 import 'package:sharide/location/locationhelper.dart';
 import 'package:sharide/models/rides_model.dart';
 import 'package:sharide/repository/rides_repository.dart';
@@ -16,19 +20,24 @@ import 'models/vahicles_model.dart';
 
 class ShareRideScreen extends StatefulWidget {
   final bool isBooking;
-  const ShareRideScreen({super.key, this.isBooking = false});
+  const ShareRideScreen({
+    super.key,
+    this.isBooking = false,
+  });
 
   @override
   State<ShareRideScreen> createState() => _ShareRideScreenState();
 }
 
 class _ShareRideScreenState extends State<ShareRideScreen> {
+  AuthenticationContoller authController = Get.find<AuthenticationContoller>();
+
   RidesModel ridesModel = RidesModel();
   TextEditingController destinationTextController = TextEditingController();
   TextEditingController priceTextController = TextEditingController();
   TextEditingController descriptionTextController = TextEditingController();
   TextEditingController locationTextController = TextEditingController();
-  TextEditingValue locationTextEditingValue = TextEditingValue();
+  TextEditingValue locationTextEditingValue = const TextEditingValue();
   // TextEditingController textEditingController = TextEditingController();
   UserRepository userRepo = Get.find<UserRepository>();
   LocationController locationController = Get.find<LocationController>();
@@ -174,13 +183,13 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                           focusNode: y,
                                           decoration: InputDecoration(
                                               focusedBorder:
-                                                  UnderlineInputBorder(
+                                                  const UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: Color(0xFF009963),
                                                     width: 2),
                                               ),
                                               enabledBorder:
-                                                  UnderlineInputBorder(
+                                                  const UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: Color(0xFFAFA8A8),
                                                     width: 2),
@@ -280,13 +289,11 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                               height: 30,
                             ),
                             Container(
-                              height: 700,
                               decoration: BoxDecoration(
                                 color: const Color(0xFF2E2E2E),
                                 borderRadius: BorderRadius.circular(17),
                               ),
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 15),
+                              padding: const EdgeInsets.all(20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -369,25 +376,27 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.map_outlined,
                                                 color: Color(0xFF009963),
                                               ),
                                               Text(
                                                 "${locationController.result.distance}",
-                                                style: TextStyle(fontSize: 17),
+                                                style: const TextStyle(
+                                                    fontSize: 17),
                                               ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.access_time_outlined,
                                                 color: Color(0xFF009963),
                                               ),
                                               Text(
                                                 " ${locationController.result.duration}",
-                                                style: TextStyle(fontSize: 17),
+                                                style: const TextStyle(
+                                                    fontSize: 17),
                                               ),
                                             ],
                                           ),
@@ -556,7 +565,7 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                             )),
                                   ),
                                   const SizedBox(
-                                    height: 35,
+                                    height: 20,
                                   ),
                                   ElevatedButton(
                                     onPressed: () async {
@@ -576,24 +585,67 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                       ridesModel.distance =
                                           locationController.result.distance ??
                                               "";
-                                      ridesModel.id = userRepo.userModel!.id;
+                                      ridesModel.id =
+                                          userRepo.userModel!.phoneNo;
                                       ridesModel.riderName =
                                           userRepo.userModel!.fullName;
                                       setState(() {});
                                       await ridesRepo.createRide(ridesModel);
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const RidesScreen(),
-                                        ),
-                                      );
+                                      widget.isBooking
+                                          ? const SizedBox()
+                                          : showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text(
+                                                    "Account details"),
+                                                content: const Text(
+                                                    "Please set your account details"),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text(
+                                                      "Cancel",
+                                                      style: TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              const BillingDetails(),
+                                                        ),
+                                                      );
+                                                    },
+                                                    child: const Text(
+                                                      "Go",
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xFF009963),
+                                                        fontSize: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) =>
+                                      //         const RidesScreen(),
+                                      //   ),
+                                      // );
                                     },
                                     child: Text(
                                       widget.isBooking
                                           ? "Book the ride"
                                           : "Share the ride",
-                                      style: TextStyle(fontSize: 23),
+                                      style: const TextStyle(fontSize: 23),
                                     ),
                                   ),
                                 ],

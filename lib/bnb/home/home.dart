@@ -1,12 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/state_manager.dart';
 import 'package:sharide/book_ride_screen.dart';
-import 'package:sharide/home/profile_management_screens/ride_history_screen.dart';
+import 'package:sharide/bnb/activity/ride_history_screen.dart';
+import 'package:sharide/bnb/profile/profile.dart';
+import 'package:sharide/repository/user_repository.dart';
 import 'package:sharide/share_ride_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final Function()? onProfileTap;
+  const Home({super.key, this.onProfileTap});
 
   @override
   State<Home> createState() => _HomeState();
@@ -21,24 +25,28 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Welcome Shilpa"),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications),
+    return GetBuilder<UserRepository>(builder: (userRepository) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Welcome ${userRepository.userModel!.fullName ?? ""}"),
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.notifications),
+            ),
+          ],
+          leadingWidth: 50,
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(
+                  "${userRepository.userModel!.profilePic ?? "https://cdn-icons-png.flaticon.com/128/4140/4140048.png"}"),
+            ),
           ),
-        ],
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.person),
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -289,7 +297,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ],
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

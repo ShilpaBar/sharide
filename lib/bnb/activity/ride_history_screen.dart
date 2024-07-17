@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pretty_logger/pretty_logger.dart';
 import 'package:sharide/models/rides_model.dart';
 import 'package:sharide/repository/rides_repository.dart';
 import 'package:sharide/repository/user_repository.dart';
@@ -26,7 +27,7 @@ class _RideHistoryScreensState extends State<RideHistoryScreens> {
         ),
         body: StreamBuilder<QuerySnapshot<RidesModel>>(
           stream: rideRepo.ridesDb
-              .where("id", isEqualTo: userRepo.userModel!.id)
+              .where("id", isEqualTo: userRepo.userModel!.phoneNo)
               .orderBy("date", descending: true)
               .snapshots(),
           builder: (context, snapshot) {
@@ -35,6 +36,7 @@ class _RideHistoryScreensState extends State<RideHistoryScreens> {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
+              PLog.green("${snapshot.error}");
               return Center(
                 child: Text("Something Went Wrong ${snapshot.error}"),
               );

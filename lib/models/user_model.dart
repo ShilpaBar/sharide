@@ -2,32 +2,26 @@
 import 'dart:convert';
 
 class UserModel {
-  final String id;
+  // final String id;
   String? fullName;
-  String? phoneNo;
+  String phoneNo;
   String? email;
   String? profilePic;
-  String? authType;
+  // String? authType;
   UserModel({
-    required this.id,
-    this.authType,
     this.fullName,
-    this.phoneNo,
+    required this.phoneNo,
     this.email,
     this.profilePic,
   });
 
   UserModel copyWith({
-    String? id,
     String? fullName,
     String? phoneNo,
     String? email,
     String? profilePic,
-    String? authType,
   }) {
     return UserModel(
-      id: id ?? this.id,
-      authType: authType ?? this.authType,
       fullName: fullName ?? this.fullName,
       phoneNo: phoneNo ?? this.phoneNo,
       email: email ?? this.email,
@@ -37,22 +31,18 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'fullName': fullName,
-      'phoneNo': phoneNo,
+      'phone': phoneNo,
       'email': email,
-      'auth_type': authType,
       'profilePic': profilePic,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      id: map['id'],
       fullName: map['fullName'],
-      phoneNo: map['phoneNo'],
+      phoneNo: map['phone'],
       email: map['email'],
-      authType: map['auth_type'],
       profilePic: map['profilePic'],
     );
   }
@@ -64,6 +54,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, fullName: $fullName, phoneNo: $phoneNo, email: $email, profilePic: $profilePic)';
+    return 'UserModel( fullName: $fullName, phoneNo: $phoneNo, email: $email, profilePic: $profilePic)';
   }
 }

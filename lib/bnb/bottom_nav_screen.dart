@@ -1,8 +1,8 @@
 import 'package:curved_navigation_bar_with_label/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'screen/home.dart';
-import 'screen/my_trips.dart';
-import 'screen/profile.dart';
+import 'package:sharide/bnb/activity/ride_history_screen.dart';
+import 'home/home.dart';
+import 'profile/profile.dart';
 
 class BottomNavigationScreen extends StatefulWidget {
   const BottomNavigationScreen({super.key});
@@ -17,7 +17,17 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: [Home(), MyTrips(), Profile()].elementAt(currentIndex),
+      body: [
+        Home(
+          onProfileTap: () {
+            setState(() {
+              currentIndex = 2;
+            });
+          },
+        ),
+        RideHistoryScreens(),
+        Profile()
+      ].elementAt(currentIndex),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Color(0xFF009963),
         buttonLabelColor: Colors.white,

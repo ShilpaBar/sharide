@@ -15,43 +15,31 @@ class UserRepository extends GetxController {
 
   UserModel? userModel;
   createUser(UserModel user) async {
-    await _userDb.doc(user.id).get().then((doc) async {
-      doc.data() == null
-          ? await _userDb.doc(user.id).set(user).whenComplete(() {
-              Get.snackbar("Success", "Your account has been created.",
-                  snackPosition: SnackPosition.BOTTOM,
-                  margin: EdgeInsets.all(20),
-                  backgroundColor: Color(0xFF009963),
-                  colorText: Colors.white);
-              userModel = user;
-            }).catchError((error, StackTrace) {
-              Get.snackbar("Error", "Something went wrong. Try again",
-                  snackPosition: SnackPosition.BOTTOM,
-                  backgroundColor: Colors.redAccent,
-                  colorText: Colors.white);
-              print(error.toString());
-            })
-          : userModel = await _userDb
-              .doc(user.id)
-              .get()
-              .then((snapShot) => snapShot.data()!);
+    await _userDb.doc(user.phoneNo).set(user).whenComplete(() {
+      Get.snackbar("Success", "Your account has been created.",
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(20),
+          backgroundColor: Color(0xFF009963),
+          colorText: Colors.white);
+      userModel = user;
+    }).catchError((error, StackTrace) {
+      Get.snackbar("Error", "Something went wrong. Try again",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white);
+      print(error.toString());
     });
-  }
-
-  getUser(String id) async {
-    userModel =
-        await _userDb.doc(id).get().then((snapShot) => snapShot.data()!);
     update();
   }
 
-  updateUser(UserModel user) async {
+  Future<UserModel?> getUser(String id) async {
     try {
-      await _userDb.doc(userModel!.id).set(user).then((x) {
-        userModel = user;
-        update();
-      });
+      userModel =
+          await _userDb.doc(id).get().then((snapShot) => snapShot.data());
+      update();
+      return userModel;
     } catch (e) {
-      PLog.red("Update Error : $e");
+      return null;
     }
   }
 }

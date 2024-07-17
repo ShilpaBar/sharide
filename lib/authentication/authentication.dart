@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pretty_logger/pretty_logger.dart';
 import 'package:sharide/repository/user_repository.dart';
 
+import '../otp_screen.dart';
 import '../signin_page.dart';
 
 class AuthenticationContoller extends GetxController {
@@ -15,7 +16,7 @@ class AuthenticationContoller extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await getUser();
       if (user != null) {
-        await userRepo.getUser(user!.providerData[0].uid!);
+        await userRepo.getUser(user!.uid);
         PLog.green("${userRepo.userModel!.toJson()}");
       }
     });
@@ -57,41 +58,69 @@ class AuthenticationContoller extends GetxController {
     return userCredential;
   }
 
-  Future<UserCredential?> signInwithPhone(
-      TextEditingController phoneNumberTextController) async {
-    String? _verificationId;
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      phoneNumber: phoneNumberTextController.text,
-      verificationCompleted: (PhoneAuthCredential credential) {
-        firebaseAuth.signInWithCredential(credential);
-      },
-      verificationFailed: (FirebaseAuthException e) {},
-      codeSent: (String verificationId, int? resendToken) {
-        _verificationId = verificationId;
-        update();
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        _verificationId = verificationId;
-        update();
-      },
-      timeout: Duration(seconds: 30),
-    );
-    // if(_verificationId!=null){
+  String? otp;
 
-    // final PhoneAuthCredential credential = PhoneAuthProvider.credential(
-    //   verificationId: _verificationId!,
-    //   smsCode: _smsController.text,
-    // );
-    // }
-    // UserCredential userCredential =
-    // await firebaseAuth.signInWithCredential(credential);
-    // debugPrint("##################${userCredential.user!.displayName}");
-    // user = userCredential.user;
+  sendOtp(
+    TextEditingController phoneNumberTextController,
+  ) async {
+    isLoading = true;
+    update();
+    await firebaseAuth.verifyPhoneNumber(
+      phoneNumber: "+91${phoneNumberTextController.text}",
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        PLog.red("${credential}");
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        PLog.error("phone verification failed: $e");
+        Get.snackbar("Error", "${e.toString().split("] ").last}",
+            backgroundGradient: LinearGradient(
+                colors: [Colors.red, Colors.redAccent],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter),
+            snackPosition: SnackPosition.BOTTOM,
+            margin: EdgeInsets.all(20));
+      },
+      codeSent: (String vId, int? resendToken) {
+        otp = vId;
+        update();
+      },
+      codeAutoRetrievalTimeout: (String vId) {
+        otp = vId;
+        update();
+      },
+      timeout: Duration.zero,
+    );
+    // return verificationId != null;
+  }
+
+  Future<UserCredential?> verifyOtp(TextEditingController smsController) async {
+    isLoading = true;
+    update();
+    UserCredential? userCredential;
+    try {
+      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: otp!,
+        smsCode: smsController.text,
+      );
+      if (credential.isBlank != null && credential.isBlank != true) {
+        userCredential = await firebaseAuth.signInWithCredential(credential);
+      }
+    } catch (e) {
+      Get.snackbar("Error", "${e.toString().split("] ").last}",
+          backgroundGradient: LinearGradient(
+              colors: [Colors.red, Colors.redAccent],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter),
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(20));
+      PLog.error(e.toString());
+    }
     isLoading = false;
     update();
-    // Once signed in, return the UserCredential
-    // return userCredential;
-    return null;
+
+    otp = null;
+    PLog.success("${userCredential}");
+    return userCredential;
   }
 
   Future<void> signOut(BuildContext context) async {

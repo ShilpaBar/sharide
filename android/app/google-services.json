@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "643037091126-9ai14t3pf3sa7q915v2g996gn8l7h6dm.apps.googleusercontent.com",
+          "client_id": "643037091126-bkdb7kl70onvf6h7q6psinl92hvhll25.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sharide.app",
-            "certificate_hash": "df7a3267d85a8bb1a8e0955fb5b9202fd9edcbf8"
+            "certificate_hash": "2cb2fa5f3d7fe0651fd8736df34c90fde6c65f86"
           }
         },
         {
@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "643037091126-vf54g7rosfslk2ju1j2r54v3ta5l2tnh.apps.googleusercontent.com",
+              "client_id": "643037091126-4dc90rlpe8q5ba23475soc41kolceat4.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.sharide.app"
+                "bundle_id": "com.sharide.sharide"
               }
             }
           ]

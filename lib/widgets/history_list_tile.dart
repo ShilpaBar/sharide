@@ -20,7 +20,8 @@ class HistoryListTile extends StatefulWidget {
 class _HistoryListTileState extends State<HistoryListTile> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.only(top: 20.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,6 +48,7 @@ class _HistoryListTileState extends State<HistoryListTile> {
                         ? "N/A"
                         : widget.pickUpLocation,
                     style: TextStyle(fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -59,6 +61,7 @@ class _HistoryListTileState extends State<HistoryListTile> {
                   Text(
                     widget.dropLocation.isEmpty ? "N/A" : widget.dropLocation,
                     style: TextStyle(fontSize: 20),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
