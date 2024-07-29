@@ -10,13 +10,13 @@ import 'package:pinput/pinput.dart';
 import 'package:pretty_logger/pretty_logger.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:sharide/authentication/authentication.dart';
-import 'package:sharide/bnb/profile/views/payment_methods/add_payment_method.dart';
+import 'package:sharide/bottom_nav/profile/views/payment_methods/add_payment_method.dart';
 import 'package:sharide/location/locationhelper.dart';
 import 'package:sharide/models/rides_model.dart';
 import 'package:sharide/repository/rides_repository.dart';
 import 'package:sharide/repository/user_repository.dart';
-import 'package:sharide/rides_screen.dart';
-import 'models/vahicles_model.dart';
+import 'package:sharide/bottom_nav/home/pages/rides_screen.dart';
+import '../../../models/vahicles_model.dart';
 
 class ShareRideScreen extends StatefulWidget {
   final bool isBooking;
@@ -102,28 +102,23 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                           ],
                         ),
                       )
-                    : Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          GoogleMap(
-                            myLocationEnabled: true,
-                            initialCameraPosition: CameraPosition(
-                              zoom: 15,
-                              target: LatLng(
-                                  locationController.myPosition!.latitude,
-                                  locationController.myPosition!.longitude),
-                            ),
-                            onMapCreated: locationController.onMapCreated,
-                            markers: {
-                              if (locationController.origin != null)
-                                locationController.origin!,
-                              if (locationController.destination != null)
-                                locationController.destination!,
-                            },
-                            onTap: locationController.addMarker,
-                            polylines: locationController.polyLines,
-                          ),
-                        ],
+                    : GoogleMap(
+                        myLocationEnabled: true,
+                        initialCameraPosition: CameraPosition(
+                          zoom: 15,
+                          target: LatLng(
+                              locationController.myPosition!.latitude,
+                              locationController.myPosition!.longitude),
+                        ),
+                        onMapCreated: locationController.onMapCreated,
+                        markers: {
+                          if (locationController.origin != null)
+                            locationController.origin!,
+                          if (locationController.destination != null)
+                            locationController.destination!,
+                        },
+                        onTap: locationController.addMarker,
+                        polylines: locationController.polyLines,
                       ),
                 DraggableScrollableSheet(
                   expand: true,
@@ -592,7 +587,7 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                       setState(() {});
                                       await ridesRepo.createRide(ridesModel);
                                       widget.isBooking
-                                          ? const SizedBox()
+                                          ? null
                                           : showDialog(
                                               context: context,
                                               builder: (context) => AlertDialog(
@@ -613,11 +608,11 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                                   ),
                                                   TextButton(
                                                     onPressed: () {
-                                                      Navigator.push(
+                                                      Navigator.pushReplacement(
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              const BillingDetails(),
+                                                              BillingDetails(),
                                                         ),
                                                       );
                                                     },

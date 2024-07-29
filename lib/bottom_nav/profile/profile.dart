@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:sharide/bnb/profile/views/payment_methods/add_payment_method.dart';
-import 'package:sharide/bnb/profile/views/edit_profile.dart';
+import 'package:sharide/bottom_nav/profile/views/payment_methods/add_payment_method.dart';
+import 'package:sharide/bottom_nav/profile/views/edit_profile.dart';
+import 'package:sharide/bottom_nav/profile/views/settings/settings_page.dart';
 import 'package:sharide/repository/user_repository.dart';
-import 'package:sharide/widgets/custom_textfeild.dart';
 import 'package:sharide/widgets/profile_menu.dart';
 import '../../authentication/authentication.dart';
 import '../../models/profile_items_model.dart';
@@ -29,7 +28,8 @@ class _ProfileState extends State<Profile> {
         leading: Icons.account_balance_wallet_outlined),
     ProfileItemsModel(
         title: "Privacy Policy", leading: Icons.privacy_tip_outlined),
-    ProfileItemsModel(title: "Help & Support", leading: Icons.help_outline),
+    ProfileItemsModel(
+        title: "Help & Support", leading: Icons.question_answer_outlined),
   ];
   // List<VoidCallback> onTapFunction =
   @override
@@ -74,7 +74,7 @@ class _ProfileState extends State<Profile> {
         ),
         body: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(50),
+            padding: EdgeInsets.all(45),
             child: Column(
               children: [
                 CircleAvatar(
@@ -119,7 +119,14 @@ class _ProfileState extends State<Profile> {
                     title: profileItemsModelList[index].title,
                     icon: profileItemsModelList[index].leading,
                     onTap: [
-                      () {},
+                      () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingsPage(),
+                          ),
+                        );
+                      },
                       () {
                         Navigator.push(
                           context,

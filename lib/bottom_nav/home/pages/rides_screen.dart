@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:sharide/widgets/confirm_order_page.dart';
 import 'package:sharide/widgets/rides_list_tile.dart';
 
-import 'models/rides_model.dart';
-import 'repository/rides_repository.dart';
+import '../../../models/rides_model.dart';
+import '../../../repository/rides_repository.dart';
 
 class RidesScreen extends StatefulWidget {
   const RidesScreen({super.key});

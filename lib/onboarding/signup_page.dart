@@ -5,17 +5,16 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:insta_image_viewer/insta_image_viewer.dart';
 import 'package:pretty_logger/pretty_logger.dart';
 import 'package:sharide/authentication/authentication.dart';
-import 'package:sharide/bnb/bottom_nav_screen.dart';
+import 'package:sharide/bottom_nav/bottom_nav_screen.dart';
 import 'package:sharide/models/user_model.dart';
-import 'package:sharide/otp_screen.dart';
+import 'package:sharide/onboarding/otp_screen.dart';
 import 'package:sharide/repository/user_repository.dart';
 
-import 'widgets/custom_textfeild.dart';
+import '../widgets/custom_textfeild.dart';
 
 class SignUpPage extends StatefulWidget {
   final String phoneNo;

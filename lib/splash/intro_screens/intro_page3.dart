@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:sharide/signin_page.dart';
+import 'package:sharide/onboarding/signin_page.dart';
 
 class IntroPage3 extends StatefulWidget {
   const IntroPage3({super.key});

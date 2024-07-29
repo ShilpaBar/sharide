@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 import 'package:sharide/models/user_model.dart';
-import 'package:sharide/otp_screen.dart';
+import 'package:sharide/onboarding/otp_screen.dart';
 import 'package:sharide/repository/user_repository.dart';
-import 'authentication/authentication.dart';
-import 'bnb/bottom_nav_screen.dart';
+import '../authentication/authentication.dart';
+import '../bottom_nav/bottom_nav_screen.dart';
 import 'signup_page.dart';
-import 'widgets/custom_textfeild.dart';
+import '../widgets/custom_textfeild.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

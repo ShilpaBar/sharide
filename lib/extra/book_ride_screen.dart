@@ -7,7 +7,7 @@ import 'package:sharide/location/locationhelper.dart';
 import 'package:sharide/models/directions_model.dart';
 import 'package:sharide/models/rides_model.dart';
 import 'package:sharide/repository/directions_repository.dart';
-import 'package:sharide/rides_screen.dart';
+import 'package:sharide/bottom_nav/home/pages/rides_screen.dart';
 
 class BookRideScreen extends StatefulWidget {
   const BookRideScreen({super.key});

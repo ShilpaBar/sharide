@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
-import 'package:sharide/bnb/bottom_nav_screen.dart';
+import 'package:sharide/bottom_nav/bottom_nav_screen.dart';
 import 'package:sharide/repository/user_repository.dart';
 
-import 'authentication/authentication.dart';
-import 'models/user_model.dart';
+import '../authentication/authentication.dart';
+import '../models/user_model.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});

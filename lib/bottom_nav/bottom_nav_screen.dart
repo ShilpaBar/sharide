@@ -1,6 +1,6 @@
 import 'package:curved_navigation_bar_with_label/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:sharide/bnb/activity/ride_history_screen.dart';
+import 'package:sharide/bottom_nav/activity/ride_history_screen.dart';
 import 'home/home.dart';
 import 'profile/profile.dart';
 

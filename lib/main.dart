@@ -6,7 +6,6 @@ import 'package:sharide/authentication/authentication.dart';
 import 'package:sharide/firebase_options.dart';
 import 'package:sharide/splash/front_page.dart';
 import 'package:sharide/location/locationhelper.dart';
-import 'package:sharide/otp_screen.dart';
 import 'package:sharide/repository/user_repository.dart';
 
 import 'repository/rides_repository.dart';

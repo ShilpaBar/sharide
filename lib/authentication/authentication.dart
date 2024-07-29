@@ -5,8 +5,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pretty_logger/pretty_logger.dart';
 import 'package:sharide/repository/user_repository.dart';
 
-import '../otp_screen.dart';
-import '../signin_page.dart';
+import '../onboarding/otp_screen.dart';
+import '../onboarding/signin_page.dart';
 
 class AuthenticationContoller extends GetxController {
   UserRepository userRepo = Get.put(UserRepository());

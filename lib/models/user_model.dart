@@ -2,12 +2,10 @@
 import 'dart:convert';
 
 class UserModel {
-  // final String id;
   String? fullName;
   String phoneNo;
   String? email;
   String? profilePic;
-  // String? authType;
   UserModel({
     this.fullName,
     required this.phoneNo,
