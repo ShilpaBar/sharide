@@ -134,10 +134,6 @@ class _EditProfileState extends State<EditProfile> {
                   readOnly: true,
                   prefixIcon: Icons.phone,
                 ),
-                // CustomTextfeild(
-                //   textEditingController: textEditingController,
-                //   prefixIcon: Icons.lock,
-                // ),
               ],
             ),
           ),

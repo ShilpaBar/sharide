@@ -38,33 +38,35 @@ dependencies:
   cupertino_icons: ^1.0.6
   lottie: ^3.1.0
   google_fonts: ^6.2.1
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.1.0
-  curved_navigation_bar_with_label: ^2.1.4
-  intl: ^0.19.0
+  # curved_navigation_bar_with_label: ^2.1.4
+  intl: ^0.20.1
   another_stepper: ^1.2.2
   quickalert: ^1.1.0
   firebase_core: ^3.0.0
   firebase_auth: ^5.0.0
-  google_sign_in: ^6.2.1
+  # google_sign_in: ^6.2.1
   get: ^4.6.6
   pretty_logger: ^1.0.0
   pinput: ^5.0.0
   cloud_firestore: ^5.0.0
   uuid: ^4.4.0
   gap: ^3.0.1
-  image_picker: ^1.1.2
   firebase_storage: ^12.0.1
-  google_maps_flutter: ^2.7.0
   geocoding: ^3.0.0
-  geolocator: ^12.0.0
+  geolocator: ^13.0.2
   flutter_polyline_points: ^2.0.0
-  flutter_google_places_sdk: ^0.3.9
   dio: ^5.4.3+1
-  # upi_india: ^3.0.1
   insta_image_viewer: ^1.0.4
-  # flutter_upi_india: ^0.0.1
-  upi_india: ^3.0.1
+  grouped_list: ^6.0.0
+  curved_navigation_bar: ^1.0.6
+  flutter_google_places_sdk: ^0.3.10
+  google_sign_in: ^6.2.2
+  image_picker: ^1.1.2
+  latlong2: ^0.9.1
+  google_maps_flutter: ^2.10.0
+
 
   
   
@@ -78,7 +80,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   # package_rename_plus: ^1.0.1
   package_rename: ^1.6.0
 

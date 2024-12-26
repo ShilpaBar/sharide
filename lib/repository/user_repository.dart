@@ -15,7 +15,7 @@ class UserRepository extends GetxController {
           );
   CollectionReference<PaymentsModel>? paymentDb;
 
-  setPamentMethodRef(String phone) {
+  setPaymentMethodRef(String phone) {
     paymentDb = _userDb.doc(phone).collection("payment_method").withConverter(
         fromFirestore: (snapshot, _) => PaymentsModel.fromMap(snapshot.data()!),
         toFirestore: (payment, _) => payment.toMap());
@@ -23,7 +23,7 @@ class UserRepository extends GetxController {
   }
 
   UserModel? userModel;
-  PaymentsModel? paymentsModel;
+  // PaymentsModel? paymentsModel;
   createUser(UserModel user) async {
     await _userDb.doc(user.phoneNo).set(user).whenComplete(() {
       Get.snackbar("Success", "Your account has been created.",
@@ -60,8 +60,8 @@ class UserRepository extends GetxController {
   }
 
   createPayMethod(String phone, PaymentsModel payMethod) async {
-    setPamentMethodRef(phone);
-    await paymentDb!.add(payMethod).whenComplete(() {
+    setPaymentMethodRef(phone);
+    await paymentDb!.doc(payMethod.accNo).set(payMethod).whenComplete(() {
       Get.snackbar(
           "Success", "You have successfully added new  payment method.",
           snackPosition: SnackPosition.BOTTOM,

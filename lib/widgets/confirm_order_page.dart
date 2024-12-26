@@ -4,11 +4,9 @@ import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:pretty_logger/pretty_logger.dart';
-import 'package:quickalert/quickalert.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sharide/location/locationhelper.dart';
 import 'package:sharide/models/rides_model.dart';
-import 'package:upi_india/upi_india.dart';
-import 'package:uuid/uuid.dart';
 
 class ConfirmOrderPage extends StatefulWidget {
   final RidesModel ridesModel;
@@ -20,9 +18,10 @@ class ConfirmOrderPage extends StatefulWidget {
 
 class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
   List<StepperData> stepperData = [];
-  final UpiIndia _upiIndia = UpiIndia();
-  UpiResponse? _transaction;
-  List<UpiApp>? apps;
+  // final UpiIndia _upiIndia = UpiIndia();
+  // UpiResponse? _transaction;
+  // List<UpiApp>? apps;
+  LocationController locationController = Get.find<LocationController>();
 
   TextStyle header = TextStyle(
     fontSize: 18,
@@ -34,116 +33,138 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
     fontSize: 14,
   );
 
-  Future<UpiResponse> initiateTransaction(UpiApp app) async {
-    String refId = DateTime.now().toIso8601String();
-    PLog.red(refId);
-    return _upiIndia.startTransaction(
-        app: app,
-        receiverUpiId: "subhabratadash2-3@okicici",
-        receiverName: "Subhabrata Das",
-        transactionRefId: refId,
-        amount: widget.ridesModel.price!);
-  }
+  // Future<UpiResponse> initiateTransaction(UpiApp app) async {
+  //   String refId = DateTime.now().toIso8601String();
+  //   PLog.red(refId);
+  //   return _upiIndia.startTransaction(
+  //       app: app,
+  //       receiverUpiId: "subhabratadash2-3@okicici",
+  //       receiverName: "Subhabrata Das",
+  //       transactionRefId: refId,
+  //       amount: widget.ridesModel.price!);
+  // }
 
   Widget displayUpiApps() {
-    if (apps == null) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (apps!.isEmpty) {
-      return Center(
-        child: Text(
-          "No apps found to handle transaction.",
-          style: header,
-        ),
-      );
-    } else {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Wrap(
-            children: apps!.map<Widget>((UpiApp app) {
-              return GestureDetector(
-                onTap: () async {
-                  _transaction = await initiateTransaction(app);
-                  if (mounted) Navigator.pop(context);
-                  setState(() {});
-                  if (_transaction != null) {
-                    PLog.red("${_transaction!.status}");
-                  }
-                  _transaction != null
-                      ? _transaction!.status == "submitted" ||
-                              _transaction!.status == "successful"
-                          ? QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.success,
-                              animType: QuickAlertAnimType.slideInUp,
-                              barrierDismissible: false,
-                              backgroundColor:
-                                  Theme.of(context).dialogBackgroundColor,
-                              title: "Order Submitted!",
-                              titleColor: Colors.white,
-                              text: "Thank you for your order",
-                              textColor: Theme.of(context).primaryColorLight,
-                              confirmBtnText: "Order Submitted",
-                              confirmBtnColor: Color.fromARGB(255, 2, 13, 9),
-                            )
-                          : QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.error,
-                              animType: QuickAlertAnimType.slideInUp,
-                              barrierDismissible: false,
-                              backgroundColor:
-                                  Theme.of(context).dialogBackgroundColor,
-                              title: "Order Failed!",
-                              titleColor: Colors.white,
-                              text: "Your payment has been failed",
-                              textColor: Theme.of(context).primaryColorLight,
-                              confirmBtnText: "Payment Failed",
-                              // confirmBtnColor: Color(0xFF009963),
-                            )
-                      : QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.error,
-                          animType: QuickAlertAnimType.slideInUp,
-                          barrierDismissible: false,
-                          backgroundColor:
-                              Theme.of(context).dialogBackgroundColor,
-                          title: "Order Cancelled",
-                          titleColor: Colors.white,
-                          text: "You have cancelled your transaction!",
-                          textColor: Theme.of(context).primaryColorLight,
-                          confirmBtnText: "Order Cancelled",
-                          confirmBtnColor: Color(0xFF009963),
-                        );
-                },
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.memory(
-                        app.icon,
-                        height: 60,
-                        width: 60,
-                      ),
-                      Text(app.name),
-                    ],
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      );
-    }
+    return Gap(10);
+    // if (apps == null) {
+    //   return Center(
+    //     child: CircularProgressIndicator(),
+    //   );
+    // } else if (apps!.isEmpty) {
+    //   return Center(
+    //     child: Text(
+    //       "No apps found to handle transaction.",
+    //       style: header,
+    //     ),
+    //   );
+    // } else {
+    //   return Align(
+    //     alignment: Alignment.topCenter,
+    //     child: SingleChildScrollView(
+    //       physics: BouncingScrollPhysics(),
+    // child: Wrap(
+    //   children: apps!.map<Widget>((UpiApp app) {
+    //     return GestureDetector(
+    //       onTap: () async {
+    //         _transaction = await initiateTransaction(app);
+    //         if (mounted) Navigator.pop(context);
+    //         setState(() {});
+    //         if (_transaction != null) {
+    //           PLog.red("${_transaction!.status}");
+    //         }
+    //         _transaction != null
+    //             ? _transaction!.status == "submitted" ||
+    //                     _transaction!.status == "successful"
+    //                 ? QuickAlert.show(
+    //                     context: context,
+    //                     type: QuickAlertType.success,
+    //                     animType: QuickAlertAnimType.slideInUp,
+    //                     barrierDismissible: false,
+    //                     backgroundColor:
+    //                         Theme.of(context).dialogBackgroundColor,
+    //                     title: "Order Submitted!",
+    //                     titleColor: Colors.white,
+    //                     text: "Thank you for your order",
+    //                     textColor: Theme.of(context).primaryColorLight,
+    //                     confirmBtnText: "Order Submitted",
+    //                     confirmBtnColor: Color.fromARGB(255, 2, 13, 9),
+    //                   )
+    //                 : QuickAlert.show(
+    //                     context: context,
+    //                     type: QuickAlertType.error,
+    //                     animType: QuickAlertAnimType.slideInUp,
+    //                     barrierDismissible: false,
+    //                     backgroundColor:
+    //                         Theme.of(context).dialogBackgroundColor,
+    //                     title: "Order Failed!",
+    //                     titleColor: Colors.white,
+    //                     text: "Your payment has been failed",
+    //                     textColor: Theme.of(context).primaryColorLight,
+    //                     confirmBtnText: "Payment Failed",
+    //                     // confirmBtnColor: Color(0xFF009963),
+    //                   )
+    //             : QuickAlert.show(
+    //                 context: context,
+    //                 type: QuickAlertType.error,
+    //                 animType: QuickAlertAnimType.slideInUp,
+    //                 barrierDismissible: false,
+    //                 backgroundColor:
+    //                     Theme.of(context).dialogBackgroundColor,
+    //                 title: "Order Cancelled",
+    //                 titleColor: Colors.white,
+    //                 text: "You have cancelled your transaction!",
+    //                 textColor: Theme.of(context).primaryColorLight,
+    //                 confirmBtnText: "Order Cancelled",
+    //                 confirmBtnColor: Color(0xFF009963),
+    //               );
+    //       },
+    //       child: Container(
+    //         height: 100,
+    //         width: 100,
+    //         child: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: <Widget>[
+    //             Image.memory(
+    //               app.icon,
+    //               height: 60,
+    //               width: 60,
+    //             ),
+    //             Text(app.name),
+    //           ],
+    //         ),
+    //       ),
+    //     );
+    //   }).toList(),
+    // ),
+    // ),
+    // );
+    // }
   }
 
   @override
   void initState() {
+    int days = 0;
+    int hour = 0;
+    int min = 0;
+    List<String> s = [];
+    if (widget.ridesModel.duration!.contains(" days")) {
+      List<String> s = widget.ridesModel.duration!.split(" days");
+      days = int.parse(s.first);
+    }
+    if (widget.ridesModel.duration!.contains(" hours")) {
+      s = s.isNotEmpty
+          ? s.last.split(" hours")
+          : widget.ridesModel.duration!.split(" hours");
+      hour = int.parse(s.first);
+    }
+    if (widget.ridesModel.duration!.contains(" mins")) {
+      s = s.isNotEmpty
+          ? s.last.split(" mins")
+          : widget.ridesModel.duration!.split(" mins");
+      min = int.parse(s.first);
+    }
+
     stepperData = [
       StepperData(
         title: StepperText("${widget.ridesModel.location}",
@@ -165,7 +186,12 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       StepperData(
         title: StepperText("${widget.ridesModel.destination}",
             textStyle: TextStyle(color: Colors.white, fontSize: 14)),
-        subtitle: StepperText("Around 01:04",
+        subtitle: StepperText(
+            "Around ${(widget.ridesModel.date).add(Duration(
+              days: days,
+              hours: hour,
+              minutes: min,
+            ))}",
             textStyle: TextStyle(fontSize: 12, color: Color(0xFFAFA8A8))),
         iconWidget: Container(
           padding: EdgeInsets.all(1.8),
@@ -180,14 +206,14 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
         ),
       ),
     ];
-    _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
-      setState(() {
-        apps = value;
-      });
-    }).catchError((e) {
-      print(e);
-      apps = [];
-    });
+    // _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
+    //   setState(() {
+    //     apps = value;
+    //   });
+    // }).catchError((e) {
+    //   print(e);
+    //   apps = [];
+    // });
     super.initState();
   }
 
@@ -201,10 +227,24 @@ class _ConfirmOrderPageState extends State<ConfirmOrderPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image(
-              image: AssetImage("assets/images/map.png"),
-              height: 270,
-              fit: BoxFit.fitHeight,
+            Container(
+              height: 300,
+              child: GoogleMap(
+                myLocationEnabled: true,
+                initialCameraPosition: CameraPosition(
+                  zoom: 15,
+                  target: LatLng(locationController.myPosition!.latitude,
+                      locationController.myPosition!.longitude),
+                ),
+                onMapCreated: locationController.onMapCreated,
+                markers: {
+                  if (locationController.origin != null)
+                    locationController.origin!,
+                  if (locationController.destination != null)
+                    locationController.destination!,
+                },
+                polylines: locationController.polyLines,
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(left: 30, right: 30),

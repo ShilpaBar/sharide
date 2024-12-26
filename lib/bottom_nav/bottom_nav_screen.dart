@@ -1,4 +1,4 @@
-import 'package:curved_navigation_bar_with_label/curved_navigation_bar.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:sharide/bottom_nav/activity/ride_history_screen.dart';
 import 'home/home.dart';
@@ -29,8 +29,11 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         Profile()
       ].elementAt(currentIndex),
       bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Color(0xFF009963),
-        buttonLabelColor: Colors.white,
+        color: Color(0xFF009963),
+        buttonBackgroundColor: Color(0xFF009963),
+        backgroundColor: Colors.black26,
+        animationCurve: Curves.easeInOut,
+        height: 55,
         index: currentIndex,
         onTap: (int newIndex) {
           setState(() {
@@ -38,18 +41,18 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
           });
         },
         items: [
-          CurvedNavigationBarItem(
-            label: "Home",
-            icon: Icon(Icons.home),
+          Icon(
+            Icons.home,
+            size: 35,
           ),
-          CurvedNavigationBarItem(
-            label: "Activity",
-            icon: Icon(Icons.bookmark_outlined),
+          Icon(
+            Icons.bookmark_outlined,
+            size: 35,
           ),
-          CurvedNavigationBarItem(
-            label: "Profile",
-            icon: Icon(Icons.person),
-          ),
+          Icon(
+            Icons.person,
+            size: 35,
+          )
         ],
       ),
     );

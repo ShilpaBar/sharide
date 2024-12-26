@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sharide/bottom_nav/profile/views/payment_methods/add_payment_method.dart';
 import 'package:sharide/bottom_nav/profile/views/edit_profile.dart';
+import 'package:sharide/bottom_nav/profile/views/payment_methods/payment_methods.dart';
 import 'package:sharide/bottom_nav/profile/views/settings/settings_page.dart';
 import 'package:sharide/repository/user_repository.dart';
 import 'package:sharide/widgets/profile_menu.dart';
@@ -131,7 +132,7 @@ class _ProfileState extends State<Profile> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BillingDetails(),
+                            builder: (context) => PaymentMethods(),
                           ),
                         );
                       },

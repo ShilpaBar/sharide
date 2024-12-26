@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:gap/gap.dart';
@@ -54,14 +56,30 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await locationController.getMyPosition();
-
-      String? address = await locationController.getAddressFromPosition();
+      String? address;
+      address = await locationController.getAddressFromPosition(LatLng(
+          locationController.myPosition!.latitude,
+          locationController.myPosition!.longitude));
+      locationController.addMarker(LatLng(
+          locationController.myPosition!.latitude,
+          locationController.myPosition!.longitude));
       if (address != null) {
         locationTextController.text = address;
         locationTextEditingValue = TextEditingValue(text: address);
       }
       setState(() {});
     });
+  }
+
+  bool checkValidation() {
+    return (ridesModel.price == null ||
+            ridesModel.price == 0.0 ||
+            ridesModel.description == null ||
+            ridesModel.description!.isEmpty ||
+            ridesModel.destination == null ||
+            ridesModel.destination!.isEmpty)
+        ? false
+        : true;
   }
 
   List<VehiclesModel> vehicleList = [
@@ -117,7 +135,20 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                           if (locationController.destination != null)
                             locationController.destination!,
                         },
-                        onTap: locationController.addMarker,
+                        onTap: (latLng) async {
+                          locationController.addMarker(latLng);
+                          if (locationController.destination != null) {
+                            String? address =
+                                await locationController.getAddressFromPosition(
+                                    LatLng(latLng.latitude, latLng.longitude));
+                            if (address != null) {
+                              destinationTextController.text = address;
+                              // destinationText =
+                              //     TextEditingValue(text: address!);
+                            }
+                            setState(() {});
+                          }
+                        },
                         polylines: locationController.polyLines,
                       ),
                 DraggableScrollableSheet(
@@ -332,7 +363,7 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                                                 ? locationController.getRoute(
                                                                     travelMode:
                                                                         TravelMode
-                                                                            .walking)
+                                                                            .bicycling)
                                                                 : locationController
                                                                     .getRoute();
                                                           }),
@@ -340,7 +371,6 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                                       label: Image.asset(
                                                         vehicle.icon,
                                                         color: Colors.white,
-                                                        // scale: 3.5,
                                                       ),
                                                       selected: vehicle.name ==
                                                           ridesModel
@@ -356,8 +386,10 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                   const SizedBox(
                                     height: 15,
                                   ),
-                                  if (locationController.result.distance !=
-                                      null)
+                                  if (locationController.result.distanceTexts !=
+                                          null &&
+                                      locationController
+                                          .result.distanceTexts!.isNotEmpty)
                                     Container(
                                       height: 50,
                                       width: 350,
@@ -376,7 +408,7 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                                 color: Color(0xFF009963),
                                               ),
                                               Text(
-                                                "${locationController.result.distance}",
+                                                "${locationController.result.distanceTexts!.first}",
                                                 style: const TextStyle(
                                                     fontSize: 17),
                                               ),
@@ -389,7 +421,7 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                                 color: Color(0xFF009963),
                                               ),
                                               Text(
-                                                " ${locationController.result.duration}",
+                                                " ${locationController.result.durationTexts!.first}",
                                                 style: const TextStyle(
                                                     fontSize: 17),
                                               ),
@@ -402,7 +434,7 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                     height: 15,
                                   ),
                                   const Text(
-                                    "Set Yout Date & Time:",
+                                    "Set Your Date & Time:",
                                     style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
@@ -572,23 +604,36 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                               : priceTextController.text);
                                       ridesModel.location =
                                           locationTextController.text;
+                                      ridesModel.locationCoordinats =
+                                          locationController.origin!.position;
+                                      ridesModel.destinationCoordinats =
+                                          locationController
+                                              .destination!.position;
                                       ridesModel.destination =
                                           destinationTextController.text;
-                                      ridesModel.duration =
-                                          locationController.result.duration ??
-                                              "";
-                                      ridesModel.distance =
-                                          locationController.result.distance ??
-                                              "";
+                                      ridesModel.duration = locationController
+                                              .result.durationTexts?.first ??
+                                          "";
+                                      ridesModel.distance = locationController
+                                              .result.distanceTexts?.first ??
+                                          "";
                                       ridesModel.id =
                                           userRepo.userModel!.phoneNo;
                                       ridesModel.riderName =
                                           userRepo.userModel!.fullName;
+                                      ridesModel.polyLines =
+                                          locationController.polyLines.first;
+                                      ridesModel.points = locationController
+                                          .polyLines.first.points;
                                       setState(() {});
-                                      await ridesRepo.createRide(ridesModel);
-                                      widget.isBooking
-                                          ? null
-                                          : showDialog(
+                                      // await ridesRepo.createRide(ridesModel);
+
+                                      !widget.isBooking &&
+                                              (await userRepo.paymentDb!
+                                                      .get()
+                                                      .then((s) => s.docs))
+                                                  .isEmpty
+                                          ? showDialog(
                                               context: context,
                                               builder: (context) => AlertDialog(
                                                 title: const Text(
@@ -627,14 +672,30 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                                   ),
                                                 ],
                                               ),
-                                            );
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) =>
-                                      //         const RidesScreen(),
-                                      //   ),
-                                      // );
+                                            )
+                                          : null;
+                                      if (checkValidation()) {
+                                        await ridesRepo.createRide(ridesModel);
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) =>
+                                        //         const RidesScreen(),
+                                        //   ),
+                                        // );
+                                        Navigator.of(context).pop();
+                                      }
+                                      if (widget.isBooking &&
+                                          ridesModel.destination!.isNotEmpty &&
+                                          locationController
+                                              .polyLines.isNotEmpty) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => RidesScreen(),
+                                          ),
+                                        );
+                                      }
                                     },
                                     child: Text(
                                       widget.isBooking

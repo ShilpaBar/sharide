@@ -15,17 +15,19 @@ class BillingDetails extends StatefulWidget {
 class _BillingDetailsState extends State<BillingDetails>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-  // TextEditingController phNoController=TextEditingController();
   TextEditingController accountNumberController = TextEditingController();
+  TextEditingController upiIdTextController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
   TextEditingController branchNameController = TextEditingController();
   TextEditingController ifcCodeController = TextEditingController();
   TextEditingController accHolderNameController = TextEditingController();
+
   UserRepository userRepository = Get.find<UserRepository>();
 
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(onTabChange);
     super.initState();
   }
 
@@ -34,6 +36,14 @@ class _BillingDetailsState extends State<BillingDetails>
     tabController.dispose();
     super.dispose();
   }
+
+  onTabChange() {
+    setState(() {
+      currentTabIndex = tabController.index;
+    });
+  }
+
+  int currentTabIndex = 0;
 
   // bool isUpi = false;
   @override
@@ -74,6 +84,7 @@ class _BillingDetailsState extends State<BillingDetails>
                     // labelPadding: EdgeInsets.symmetric(horizontal: 20),
                     tabAlignment: TabAlignment.fill,
                     controller: tabController,
+
                     dividerHeight: 0,
                     tabs: [
                       Tab(
@@ -128,7 +139,8 @@ class _BillingDetailsState extends State<BillingDetails>
                   ),
                   Column(
                     children: [
-                      const CustomTextfeild(
+                      CustomTextfeild(
+                        textEditingController: upiIdTextController,
                         prefixIcon: Icons.payment,
                         hintText: "UPI id",
                       ),
@@ -137,75 +149,20 @@ class _BillingDetailsState extends State<BillingDetails>
                 ],
               ),
             ),
-
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     ChoiceChip(
-            //       label: const Text(
-            //         "Bank account",
-            //         style: TextStyle(color: Colors.white, fontSize: 15),
-            //       ),
-            //       selectedColor: Color(0xFF009963),
-            //       selected: !isUpi,
-            //       onSelected: (_) {
-            //         isUpi = false;
-            //         setState(() {});
-            //       },
-            //     ),
-            //     ChoiceChip(
-            //       label: const Text(
-            //         "UPI account",
-            //         style: TextStyle(color: Colors.white, fontSize: 15),
-            //       ),
-            //       selectedColor: Color(0xFF009963),
-            //       selected: isUpi,
-            //       onSelected: (_) {
-            //         isUpi = true;
-            //         setState(() {});
-            //       },
-            //     )
-            //   ],
-            // ),
-            // if (!isUpi) ...[
-            //   const CustomTextfeild(
-            //     prefixIcon: Icons.account_balance,
-            //     hintText: "Bank name",
-            //   ),
-            //   const CustomTextfeild(
-            //     prefixIcon: Icons.comment_bank,
-            //     hintText: "Branch name",
-            //   ),
-            //   const CustomTextfeild(
-            //     prefixIcon: Icons.account_balance,
-            //     hintText: "Bank account number",
-            //   ),
-            //   const CustomTextfeild(
-            //     prefixIcon: Icons.pin,
-            //     hintText: "IFSC code",
-            //   ),
-            //   const CustomTextfeild(
-            //     prefixIcon: Icons.person,
-            //     hintText: "Account holder name",
-            //   ),
-            // ],
-            // if (isUpi) ...[
-            //   const CustomTextfeild(
-            //     prefixIcon: Icons.payment,
-            //     hintText: "UPI id",
-            //   ),
-            // ],
             ElevatedButton(
                 onPressed: () async {
                   await userRepository.createPayMethod(
                     userRepository.userModel!.phoneNo,
-                    PaymentsModel(
-                      accNo: accountNumberController.text,
-                      bankName: bankNameController.text,
-                      branchName: branchNameController.text,
-                      ifscCode: ifcCodeController.text,
-                      accHolderName: accHolderNameController.text,
-                    ),
+                    currentTabIndex == 1
+                        ? PaymentsModel(
+                            accNo: upiIdTextController.text, isUpi: true)
+                        : PaymentsModel(
+                            accNo: accountNumberController.text,
+                            bankName: bankNameController.text,
+                            branchName: branchNameController.text,
+                            ifscCode: ifcCodeController.text,
+                            accHolderName: accHolderNameController.text,
+                          ),
                   );
                   Navigator.pop(context);
                 },

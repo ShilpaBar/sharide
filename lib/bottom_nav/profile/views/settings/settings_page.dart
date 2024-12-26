@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:sharide/bottom_nav/profile/views/settings/notification_page.dart';
 import 'package:sharide/widgets/settings_list_tile.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -15,7 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,7 +35,13 @@ class _SettingsPageState extends State<SettingsPage> {
             settingsListTile(
                 title: "Notification",
                 icon: Icons.notifications_none_outlined,
-                onTap: () {}),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NotificationPage(),
+                      ));
+                }),
             settingsListTile(
                 title: "Language", icon: Icons.language_outlined, onTap: () {}),
             settingsListTile(

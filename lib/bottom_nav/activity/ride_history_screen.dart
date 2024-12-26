@@ -47,6 +47,7 @@ class _RideHistoryScreensState extends State<RideHistoryScreens> {
                 );
               } else {
                 return ListView.builder(
+                    padding: const EdgeInsets.all(10.0),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       RidesModel data = snapshot.data!.docs[index].data();

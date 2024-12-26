@@ -30,9 +30,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   ];
   // RidesModel? lastRide;
   RidesRepository ridesRepo = Get.find<RidesRepository>();
+  UserRepository userRepository = Get.find<UserRepository>();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      userRepo.setPaymentMethodRef(userRepository.userModel!.phoneNo);
+
       await ridesRepo.ridesDb
           .where("id", isEqualTo: userRepo.userModel!.phoneNo)
           .get()
@@ -51,7 +54,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<UserRepository>(builder: (userRepository) {
+    return GetBuilder<UserRepository>(builder: (_) {
       return Scaffold(
         appBar: AppBar(
           title: Text("Welcome ${userRepository.userModel!.fullName ?? ""}"),
@@ -220,7 +223,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 Container(
                   // height: 250,
-                  width: 350,
+                  width: 365,
                   decoration: BoxDecoration(
                     color: Color(0xFFD9D9D9),
                     borderRadius: BorderRadius.circular(17),
@@ -229,7 +232,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     children: [
                       Container(
                         padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                         margin:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                         decoration: BoxDecoration(

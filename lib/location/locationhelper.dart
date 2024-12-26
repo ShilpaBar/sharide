@@ -63,10 +63,9 @@ class LocationController extends GetxController {
     }
   }
 
-  Future<String>? getAddressFromPosition() async {
-    addMarker(LatLng(myPosition!.latitude, myPosition!.longitude));
-    final placemarkList = await placemarkFromCoordinates(
-        myPosition!.latitude, myPosition!.longitude);
+  Future<String>? getAddressFromPosition(LatLng pos) async {
+    final placemarkList =
+        await placemarkFromCoordinates(pos.latitude, pos.longitude);
     Placemark placeMark = placemarkList.first;
     PLog.red(
         "${placeMark.street},${placeMark.subThoroughfare},${placeMark.thoroughfare},${placeMark.subLocality},${placeMark.locality},${placeMark.administrativeArea},${placeMark.postalCode}");
@@ -137,6 +136,7 @@ class LocationController extends GetxController {
 
   void setDestination(String address) async {
     LatLng? pos = await getLocationFromAddress(address);
+
     if (pos != null) {
       destination = Marker(
         markerId: const MarkerId("Destination"),
@@ -155,11 +155,14 @@ class LocationController extends GetxController {
   getRoute({TravelMode travelMode = TravelMode.driving}) async {
     PolylinePoints polylinePoints = PolylinePoints();
     result = await polylinePoints.getRouteBetweenCoordinates(
-        AppConstants.gmapApiKey,
-        PointLatLng(origin!.position.latitude, origin!.position.longitude),
-        PointLatLng(
-            destination!.position.latitude, destination!.position.longitude),
-        travelMode: travelMode);
+      request: PolylineRequest(
+          origin: PointLatLng(
+              origin!.position.latitude, origin!.position.longitude),
+          destination: PointLatLng(
+              destination!.position.latitude, destination!.position.longitude),
+          mode: travelMode),
+      googleApiKey: AppConstants.gmapApiKey,
+    );
     update();
 
     if (result.points.isNotEmpty) {
@@ -182,7 +185,26 @@ class LocationController extends GetxController {
               .toList(),
         ),
       };
+
       update();
+      await focusOnPolyline();
     }
+  }
+
+  focusOnPolyline() async {
+    // final GoogleMapController controller = await mapController.future;
+    LatLngBounds bounds;
+    if (origin!.position.latitude > destination!.position.latitude &&
+        origin!.position.longitude > destination!.position.longitude) {
+      bounds = LatLngBounds(
+          southwest: destination!.position, northeast: origin!.position);
+    } else {
+      bounds = LatLngBounds(
+          southwest: origin!.position, northeast: destination!.position);
+    }
+    update();
+    (await mapController.future)
+        .animateCamera(CameraUpdate.newLatLngBounds(bounds, 100));
+    update();
   }
 }
