@@ -692,7 +692,9 @@ class _ShareRideScreenState extends State<ShareRideScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => RidesScreen(),
+                                            builder: (context) => RidesScreen(
+                                              ridesModel: ridesModel,
+                                            ),
                                           ),
                                         );
                                       }
